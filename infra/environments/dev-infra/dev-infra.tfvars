@@ -24,9 +24,9 @@ frontend_service_name = "cstudio-fe"
 
 
 # --- GitHub Repo Details ---
-github_conn_name = "creative-studio-github-gcc"
-github_repo_owner = "subrahmanyam-kethe_hcl"
-github_repo_name = "gcc-creative-studio"
+github_conn_name = "test"
+github_repo_owner = "subrahmanyamkethepalli"
+github_repo_name = "gcc-creativ-studio-1"
 github_branch_name = "master"
 
 
