@@ -1,0 +1,6 @@
+ENV_NAME=dev-infra
+BE_SERVICE_NAME=cstudio-be
+FE_SERVICE_NAME=cstudio-fe
+GITHUB_BRANCH=main
+GITHUB_CONN_NAME=nitesh-github-gcc
+LAST_COMPLETED_STEP=7

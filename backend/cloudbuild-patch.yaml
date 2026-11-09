@@ -1,0 +1,18 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build'
+    env: ['DOCKER_BUILDKIT=1']
+    args:
+      - 'build'
+      - '-t'
+      - '${_IMAGE}'
+      - '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push'
+    args:
+      - 'push'
+      - '${_IMAGE}'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
