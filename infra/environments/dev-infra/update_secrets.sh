@@ -416,11 +416,7 @@ for SECRET_NAME in $ALL_SECRETS; do
       AUTO_DISCOVERED=true
       ;;
 
-    "GOOGLE_TOKEN_AUDIENCE")
-      SECRET_VALUE="$AUTO_OAUTH_CLIENT_ID"
-      AUTO_DISCOVERED=true
-      ;;
-
+    
   esac
 
 
