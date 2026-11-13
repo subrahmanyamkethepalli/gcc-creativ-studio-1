@@ -108,8 +108,8 @@ module "creative_studio_platform" {
   backend_service_name     = var.backend_service_name
   backend_custom_audiences = var.backend_custom_audiences
 
-  #be_env_vars             = var.be_env_vars
-  container_env_vars = merge(var.be_env_vars["common"],var.be_env_vars[var.environment])
+  be_env_vars             = var.be_env_vars
+  #container_env_vars = merge(var.be_env_vars["common"],var.be_env_vars[var.environment])
   be_build_substitutions  = var.be_build_substitutions
   backend_runtime_secrets = var.backend_runtime_secrets
 
