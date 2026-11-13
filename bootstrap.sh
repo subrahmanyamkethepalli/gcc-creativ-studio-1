@@ -139,7 +139,8 @@ read_state() {
     #done
     #echo
     #warn "Proxy connection check timed out, but proceeding..."
-#}
+	return 0
+}
 
 stop_sql_proxy() {
    # if [ -n "$PROXY_PID" ]; then
