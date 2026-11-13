@@ -86,13 +86,9 @@ frontend_secrets = [
   "GOOGLE_CLIENT_ID",          # Your Google OAuth 2.0 Client ID for web
 ]
 
-backend_secrets = [
-  "GOOGLE_TOKEN_AUDIENCE",
-]
+backend_secrets = []
 
-backend_runtime_secrets = {
-  "GOOGLE_TOKEN_AUDIENCE" = "GOOGLE_TOKEN_AUDIENCE"
-}
+backend_runtime_secrets = {}
 
 apis_to_enable = [
   "servicenetworking.googleapis.com",
