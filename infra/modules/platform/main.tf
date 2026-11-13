@@ -144,7 +144,7 @@ module "backend_service" {
   environment    = var.environment
 
   service_name    = var.backend_service_name
-  container_env_vars = var.container_env_vars
+  #container_env_vars = var.container_env_vars
   resource_prefix = "cs-be"
 
   vpc_id    = var.vpc_id
