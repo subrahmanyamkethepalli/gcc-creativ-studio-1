@@ -117,36 +117,37 @@ start_sql_proxy() {
     export INSTANCE_CONNECTION_NAME="$DB_INSTANCE_NAME"
 
     # 2. Download Proxy (if missing)
-    if [ ! -f "cloud-sql-proxy" ]; then
-        curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.8.0/cloud-sql-proxy.linux.amd64
-        chmod +x cloud-sql-proxy
-    fi
+    #if [ ! -f "cloud-sql-proxy" ]; then
+     #   curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.8.0/cloud-sql-proxy.linux.amd64
+      #  chmod +x cloud-sql-proxy
+    #fi
 
     # 3. Start Proxy in Background (Port 5432)
-    ./cloud-sql-proxy --address 0.0.0.0 --port 5432 "$DB_INSTANCE_NAME" > /dev/null 2>&1 &
-    PROXY_PID=$!
-    export PROXY_PID
+    #./cloud-sql-proxy --private-ip --address 127.0.0.1 --port 5432 "$DB_INSTANCE_NAME" > /dev/null 2>&1 &
+    #PROXY_PID=$!
+    #export PROXY_PID
     
     # 4. Wait for Readiness
-    echo -n "   Waiting for proxy connection..."
-    for i in {1..30}; do
-        if (echo > /dev/tcp/127.0.0.1/5432) >/dev/null 2>&1; then
-            echo " Connected!"
-            return 0
-        fi
-        echo -n "."
-        sleep 1
-    done
-    echo
-    warn "Proxy connection check timed out, but proceeding..."
-}
+    #echo -n "   Waiting for proxy connection..."
+    #for i in {1..30}; do
+     #   if (echo > /dev/tcp/127.0.0.1/5432) >/dev/null 2>&1; then
+      #      echo " Connected!"
+       #     return 0
+        #fi
+        #echo -n "."
+        #sleep 1
+    #done
+    #echo
+    #warn "Proxy connection check timed out, but proceeding..."
+#}
 
 stop_sql_proxy() {
-    if [ -n "$PROXY_PID" ]; then
-        info "Stopping Cloud SQL Proxy..."
-        kill "$PROXY_PID" 2>/dev/null || true
-        unset PROXY_PID
-    fi
+   # if [ -n "$PROXY_PID" ]; then
+    #    info "Stopping Cloud SQL Proxy..."
+     #   kill "$PROXY_PID" 2>/dev/null || true
+      #  unset PROXY_PID
+    #fi
+	 return 0 
 }
 
 export_db_vars() {
@@ -156,9 +157,10 @@ export_db_vars() {
     export DB_USER="studio_user"
     export DB_PASS="$DB_PASS"
     export DB_NAME="creative_studio"
-    export DB_HOST="127.0.0.1" # Proxy address
+	export DB_HOST="/cloudsql/${INSTANCE_CONNECTION_NAME}"
     export DB_PORT="5432"
-    export USE_CLOUD_SQL_AUTH_PROXY=true
+    export USE_CLOUD_SQL_AUTH_PROXY=false
+    
 }
 
 # --- Script Functions ---
