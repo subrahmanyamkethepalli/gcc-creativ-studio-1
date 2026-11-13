@@ -9,7 +9,7 @@ subnet_id = "proj-sbd-ai-poc-h-sopke-vnet-subnet"
 
 
 # Waiting for DNS team
-internal_app_url = "sbd-poc.com"
+internal_app_url = "https://sbd-poc.com"
 
 # Waiting for Network/IPAM team
 proxy_only_subnet_cidr = ""
