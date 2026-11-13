@@ -1,3 +1,5 @@
+/*
+
 # Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,3 +39,4 @@ resource "google_cloudbuild_trigger" "this" {
 
   included_files = var.included_files_glob
 }
+*/
