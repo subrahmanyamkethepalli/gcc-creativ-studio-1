@@ -191,7 +191,11 @@ variable "subnet_id" {
   type        = string
   description = "Self-link or name of the existing subnetwork."
 }
-
+variable "container_env_vars" {
+ description = "Environment variables for backend Cloud Run"
+ type        = map(string)
+ default     = {}
+}
 
 # ==============================================================================
 # Service Accounts
