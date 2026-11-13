@@ -430,8 +430,7 @@ for SECRET_NAME in $ALL_SECRETS; do
 
     info "  Auto-discovered value."
 
-  elif [ "$SECRET_NAME" = "GOOGLE_CLIENT_ID" ] ||
-       [ "$SECRET_NAME" = "GOOGLE_TOKEN_AUDIENCE" ]; then
+  elif [ "$SECRET_NAME" = "GOOGLE_CLIENT_ID" ]; then
 
     warn "  OAuth Client ID could not be auto-discovered."
 
