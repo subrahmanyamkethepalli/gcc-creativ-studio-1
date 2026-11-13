@@ -62,12 +62,12 @@ class ConfigService(BaseSettings):
     GEMINI_AUDIO_ANALYSIS_MODEL_ID: str = "gemini-2.5-pro"
 
     # --- Database Configuration ---
-    INSTANCE_CONNECTION_NAME: str = ""
+    INSTANCE_CONNECTION_NAME: str = "sbd-ai-poc-h:us-central1:creative-studio-db-0077090e""sbd-ai-poc-h:us-central1:creative-studio-db-0077090e"
     DB_USER: str = "postgres"
     DB_PASS: str = "password"
     DB_NAME: str = "creative_studio"
-    USE_CLOUD_SQL_AUTH_PROXY: bool = False
-    DB_HOST: str = "localhost"
+    USE_CLOUD_SQL_AUTH_PROXY: bool = True
+    DB_HOST: str = "127.0.0.1"
     DB_PORT: str = "5432"
 
     # --- Veo ---
