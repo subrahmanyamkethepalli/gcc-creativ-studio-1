@@ -97,24 +97,24 @@ read_state() {
 }
 
 # --- Database Connectivity Helpers ---
-start_sql_proxy() {
-    info "Starting Cloud SQL Auth Proxy..."
+#start_sql_proxy() {
+    #info "Starting Cloud SQL Auth Proxy..."
     
     # 1. Get Instance Connection Name
     # Try Terraform output first, fallback to gcloud
-    pushd "$REPO_ROOT/infra/environments/$ENV_NAME" > /dev/null
-    DB_INSTANCE_NAME=$(terraform output -raw cloud_sql_connection_name 2>/dev/null)
-    popd > /dev/null
+    #pushd "$REPO_ROOT/infra/environments/$ENV_NAME" > /dev/null
+    #DB_INSTANCE_NAME=$(terraform output -raw cloud_sql_connection_name 2>/dev/null)
+    #popd > /dev/null
 
-    if [ -z "$DB_INSTANCE_NAME" ]; then
-        DB_INSTANCE_NAME=$(gcloud sql instances list --format="value(connectionName)" --filter="name:creative-studio-db*" --project="$GCP_PROJECT_ID" | head -n 1)
-    fi
+    #if [ -z "$DB_INSTANCE_NAME" ]; then
+       # DB_INSTANCE_NAME=$(gcloud sql instances list --format="value(connectionName)" --filter="name:creative-studio-db*" --project="$GCP_PROJECT_ID" | head -n 1)
+    #fi
 
-    if [ -z "$DB_INSTANCE_NAME" ]; then
-        fail "Could not find Cloud SQL instance. Ensure Terraform ran successfully."
-    fi
+    #if [ -z "$DB_INSTANCE_NAME" ]; then
+    #    fail "Could not find Cloud SQL instance. Ensure Terraform ran successfully."
+    #fi
 
-    export INSTANCE_CONNECTION_NAME="$DB_INSTANCE_NAME"
+   # export INSTANCE_CONNECTION_NAME="$DB_INSTANCE_NAME"
 
     # 2. Download Proxy (if missing)
     #if [ ! -f "cloud-sql-proxy" ]; then
