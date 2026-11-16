@@ -21,7 +21,7 @@
 # up the Creative Studio infrastructure in a new or existing Google Cloud project.
 # It saves progress and can be safely restarted if it fails.
 # ==============================================================================
-
+RUN_LOCAL_DB_BOOTSTRAP="${RUN_LOCAL_DB_BOOTSTRAP:-false}"
 set -e
 
 # --- Configuration ---
@@ -682,7 +682,7 @@ main() {
         "populate_oauth_secrets"
         "update_oauth_client"
         "update_secrets"
-        "seed_data"
+        #"seed_data"
         "trigger_builds" 
     )
     for i in "${!steps_to_run[@]}"; do
