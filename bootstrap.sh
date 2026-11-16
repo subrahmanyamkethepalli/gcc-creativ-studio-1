@@ -97,7 +97,7 @@ read_state() {
 }
 
 # --- Database Connectivity Helpers ---
-#start_sql_proxy() {
+start_sql_proxy() {
     #info "Starting Cloud SQL Auth Proxy..."
     
     # 1. Get Instance Connection Name
