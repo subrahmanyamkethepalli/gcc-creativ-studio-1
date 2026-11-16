@@ -1,4 +1,3 @@
-
 # ==============================================================================
 # Shared Platform Resources
 # ==============================================================================
@@ -58,13 +57,8 @@ locals {
     ]
   )
 
-  # Private Creative Studio application URL exposed by the
-  # Internal Application Load Balancer.
   frontend_url = trimsuffix(var.internal_app_url, "/")
-
-  # Backend API is exposed through the same Internal Application
-  # Load Balancer using the /api path.
-  backend_url = "${local.frontend_url}/api"
+  backend_url  = "${local.frontend_url}/api"
 
   backend_env_vars = merge(
     lookup(var.be_env_vars, "common", {}),
@@ -178,14 +172,9 @@ module "backend_service" {
 # ==============================================================================
 # Frontend Cloud Run Build Trigger
 #
-# Firebase Hosting is not used.
-#
+# Firebase Hosting is NOT used.
 # This module creates the frontend Cloud Build trigger.
-# The frontend/cloudbuild-deploy.yaml file builds the frontend container image
-# and deploys the cstudio-fe service to Cloud Run.
-#
-# The module directory retains its historical firebase-hosting-service name,
-# but this invocation must only create the Cloud Build trigger.
+# frontend/cloudbuild-deploy.yaml deploys cstudio-fe to Cloud Run.
 # ==============================================================================
 
 module "frontend_service" {
@@ -244,14 +233,9 @@ module "backend_secrets" {
 # ==============================================================================
 # Internal Application Load Balancer
 #
-# Keep this module disabled until all of the following are available:
-#
-# 1. Proxy-only subnet CIDR
-# 2. Regional SSL certificate
-# 3. Internal DNS record
-# 4. Frontend and backend Cloud Run services
-#
-# After these prerequisites are ready, this block can be enabled.
+# Disabled temporarily.
+# Enable after proxy-only subnet, SSL certificate and DNS configuration
+# are available and both Cloud Run services are deployed.
 # ==============================================================================
 
 /*
