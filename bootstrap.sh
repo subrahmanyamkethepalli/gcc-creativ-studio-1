@@ -551,79 +551,68 @@ update_secrets() {
     success "All applicable secrets have been populated."
 }
 
-seed_data() {
+ seed_data() {
     step 12 "Seeding Initial Data (Workspaces, Templates, Assets)"
+
+    if [[ "$RUN_LOCAL_DB_BOOTSTRAP" != "true" ]]; then
+        warn "Skipping local database migrations and data seeding."
+        info "Database connectivity and migrations will be handled by the backend Cloud Run service."
+        return 0
+    fi
+
     cd "$REPO_ROOT"
 
     info "The user running this script will be set as the owner of initial data."
-    local CURRENT_USER=$(gcloud config get-value account 2>/dev/null)
+    local CURRENT_USER
+    CURRENT_USER=$(gcloud config get-value account 2>/dev/null)
+
     if [ -z "$CURRENT_USER" ]; then
-      warn "Could not determine current gcloud user. Defaulting to 'system' owner in bootstrap script."
-      CURRENT_USER="system"
+        warn "Could not determine current gcloud user. Defaulting to 'system' owner."
+        CURRENT_USER="system"
     fi
 
-    info "Project:      ${C_YELLOW}${GCP_PROJECT_ID}${C_RESET}"
-    info "Deploying as: ${C_YELLOW}${CURRENT_USER}${C_RESET}"
-
-    # Establish Database Connectivity
     export_db_vars
     start_sql_proxy
-    # Ensure proxy stops even if this function fails
     trap stop_sql_proxy EXIT
 
-    # Temporarily change to the project root so Python module resolution works
-    pushd "$REPO_ROOT" > /dev/null
+    pushd "$REPO_ROOT" >/dev/null
 
-    # 1. Manually construct the CORRECT asset bucket name
     local ASSET_BUCKET_NAME="${GCP_PROJECT_ID}-cs-development-bucket"
-    success "Using asset bucket: gs://${ASSET_BUCKET_NAME}"
 
-    info "Setting bootstrap script environment variables..."
-    export GOOGLE_CLOUD_PROJECT=$GCP_PROJECT_ID
-    export ADMIN_USER_EMAIL=$CURRENT_USER
-    export GENMEDIA_BUCKET=$ASSET_BUCKET_NAME
+    export GOOGLE_CLOUD_PROJECT="$GCP_PROJECT_ID"
+    export ADMIN_USER_EMAIL="$CURRENT_USER"
+    export GENMEDIA_BUCKET="$ASSET_BUCKET_NAME"
     export ENVIRONMENT="${ENVIRONMENT:-development}"
 
     local PYTHON_SCRIPT_PATH="backend/bootstrap/bootstrap.py"
+
     if [ ! -f "$PYTHON_SCRIPT_PATH" ]; then
-        fail "Bootstrap script not found at: ${PYTHON_SCRIPT_PATH}"
+        fail "Bootstrap script not found: $PYTHON_SCRIPT_PATH"
     fi
 
-    # --- Set up virtual environment and install dependencies using uv ---
-    info "Setting up Python virtual environment for data seeding using uv..."
-    VENV_DIR="$REPO_ROOT/backend/.venv"
-    PYPROJECT_FILE="$REPO_ROOT/backend/pyproject.toml"
+    local VENV_DIR="$REPO_ROOT/backend/.venv"
+    local PYPROJECT_FILE="$REPO_ROOT/backend/pyproject.toml"
 
     if [ ! -f "$PYPROJECT_FILE" ]; then
-        popd > /dev/null
-        fail "Python project file not found at '$PYPROJECT_FILE'."
+        popd >/dev/null
+        fail "Python project file not found: $PYPROJECT_FILE"
     fi
 
-    # Create venv if it doesn't exist
     uv venv "$VENV_DIR" --python python3
-
-    # Install dependencies from pyproject.toml into the virtual environment
-    info "Installing Python project and its dependencies from 'backend/pyproject.toml'..."
-    # Use an editable install (-e) to ensure all project dependencies are installed.
     uv pip install --python "$VENV_DIR/bin/python" -e backend
 
-    info "Executing Python bootstrap script..."
-    # We `cd` into the backend directory so that relative paths to assets inside the python script resolve correctly.
-    # The editable install ensures that `from src...` imports work without needing PYTHONPATH.
     if (cd backend && "$VENV_DIR/bin/python" -m bootstrap.bootstrap); then
         success "Python bootstrap script executed successfully."
     else
         fail "Python bootstrap script failed."
     fi
 
-    # Return to the original directory
-    popd > /dev/null
-
-    # Cleanup
+    popd >/dev/null
     stop_sql_proxy
     trap - EXIT
 }
-
+    
+   
 
 
 trigger_builds() {
