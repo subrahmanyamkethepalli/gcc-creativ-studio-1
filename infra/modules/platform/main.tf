@@ -1,17 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 
 # ==============================================================================
 # Shared Platform Resources
@@ -76,7 +62,8 @@ locals {
   # Internal Application Load Balancer.
   frontend_url = trimsuffix(var.internal_app_url, "/")
 
-  # Backend API is exposed through the same Internal Application Load Balancer.
+  # Backend API is exposed through the same Internal Application
+  # Load Balancer using the /api path.
   backend_url = "${local.frontend_url}/api"
 
   backend_env_vars = merge(
@@ -133,7 +120,7 @@ module "postgresql" {
 
 
 # ==============================================================================
-# Backend Cloud Run Service
+# Backend Cloud Run Service and Cloud Build Trigger
 # ==============================================================================
 
 module "backend_service" {
@@ -144,7 +131,6 @@ module "backend_service" {
   environment    = var.environment
 
   service_name    = var.backend_service_name
-  #container_env_vars = var.container_env_vars
   resource_prefix = "cs-be"
 
   vpc_id    = var.vpc_id
@@ -188,29 +174,18 @@ module "backend_service" {
   db_secret_id              = "creative-studio-db-password"
 }
 
-/*
+
 # ==============================================================================
-# Firebase Project
+# Frontend Cloud Run Build Trigger
 #
 # Firebase Hosting is not used.
-# The Firebase project is retained because Creative Studio still uses the
-# Firebase Web App SDK and Firebase Authentication configuration.
-# ==============================================================================
-
-resource "google_firebase_project" "default" {
-  provider = google-beta
-  project  = var.gcp_project_id
-}
-
-
-# ==============================================================================
-# Frontend Build Trigger
 #
-# This module now creates only the frontend Cloud Build trigger.
-# It must not create a Firebase Hosting site.
+# This module creates the frontend Cloud Build trigger.
+# The frontend/cloudbuild-deploy.yaml file builds the frontend container image
+# and deploys the cstudio-fe service to Cloud Run.
 #
-# The referenced frontend/cloudbuild-deploy.yaml must build the frontend
-# Docker image and deploy cstudio-fe to Cloud Run.
+# The module directory retains its historical firebase-hosting-service name,
+# but this invocation must only create the Cloud Build trigger.
 # ==============================================================================
 
 module "frontend_service" {
@@ -218,9 +193,9 @@ module "frontend_service" {
 
   gcp_project_id = var.gcp_project_id
   gcp_region     = var.gcp_region
+  environment    = var.environment
 
   service_name    = var.frontend_service_name
-  environment     = var.environment
   resource_prefix = "cs-fe"
 
   cloudbuild_sa    = var.cloudbuild_sa
@@ -238,17 +213,14 @@ module "frontend_service" {
       _BACKEND_URL        = "/api"
       _FE_SERVICE_NAME    = var.frontend_service_name
       _BACKEND_SERVICE_ID = var.backend_service_name
+      _SERVICE_NAME       = var.frontend_service_name
       _PROJECT_ID         = var.gcp_project_id
       _REGION             = var.gcp_region
     }
   )
-
-  depends_on = [
-    google_firebase_project.default
-  ]
 }
 
-*/
+
 # ==============================================================================
 # Secret Manager
 # ==============================================================================
@@ -260,6 +232,7 @@ module "frontend_secrets" {
   secret_names   = var.frontend_secrets
 }
 
+
 module "backend_secrets" {
   source = "../secret-manager"
 
@@ -267,9 +240,20 @@ module "backend_secrets" {
   secret_names   = var.backend_secrets
 }
 
+
 # ==============================================================================
 # Internal Application Load Balancer
+#
+# Keep this module disabled until all of the following are available:
+#
+# 1. Proxy-only subnet CIDR
+# 2. Regional SSL certificate
+# 3. Internal DNS record
+# 4. Frontend and backend Cloud Run services
+#
+# After these prerequisites are ready, this block can be enabled.
 # ==============================================================================
+
 /*
 module "internal_load_balancer" {
   source = "../internal-load-balancer"
@@ -288,5 +272,10 @@ module "internal_load_balancer" {
   backend_service_name  = var.backend_service_name
 
   ssl_certificate_id = var.ssl_certificate_id
+
+  depends_on = [
+    module.backend_service,
+    module.frontend_service
+  ]
 }
 */
