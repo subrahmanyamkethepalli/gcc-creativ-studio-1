@@ -1,5 +1,3 @@
-/*
-
 # Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 # ==============================================================================
 # Frontend Cloud Build Trigger
 #
-# Firebase Hosting has been removed.
-# The Creative Studio frontend will run on Cloud Run behind the
-# Internal Application Load Balancer.
+# Firebase Hosting is NOT used.
+#
+# This module creates only the Cloud Build trigger for the frontend.
+# frontend/cloudbuild-deploy.yaml is responsible for building the frontend
+# container image and deploying cstudio-fe to Cloud Run.
 # ==============================================================================
 
 resource "google_cloudbuild_trigger" "this" {
@@ -39,4 +40,3 @@ resource "google_cloudbuild_trigger" "this" {
 
   included_files = var.included_files_glob
 }
-*/
