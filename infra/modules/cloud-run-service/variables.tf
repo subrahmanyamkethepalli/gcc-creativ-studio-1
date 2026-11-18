@@ -94,7 +94,7 @@ variable "scaling_min_instances" {
 variable "scaling_max_instances" {
   type        = number
   description = "Maximum number of container instances."
-  default     = 15
+  default     = 10
 }
 
 variable "source_repository_id" {
