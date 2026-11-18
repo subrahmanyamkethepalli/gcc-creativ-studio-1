@@ -97,7 +97,7 @@ variable "be_memory" {
 variable "backend_scaling_max_instances" {
   type        = number
   description = "Maximum number of backend Cloud Run instances."
-  default     = 100
+  default     = 15
 }
 
 variable "backend_runtime_secrets" {
