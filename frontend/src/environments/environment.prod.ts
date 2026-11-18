@@ -31,5 +31,5 @@ export const environment = {
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   ADMIN: 'admin',
   GOOGLE_CLIENT_ID:
-    '564282229589-7cceq17hocbpi4j9152mi8197i0ncbmk.apps.googleusercontent.com',
+    '393352738141-rp3afduv41ml1o6dre2gk0ecpgj9q1pr.apps.googleusercontent.com',
 };
