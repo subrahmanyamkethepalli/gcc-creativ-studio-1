@@ -60,6 +60,7 @@ be_env_vars = {
     ENVIRONMENT                    = "development"
     GOOGLE_TOKEN_AUDIENCE          = "393352738141-rp3afduv41ml1o6dre2gk0ecpgj9q1pr.apps.googleusercontent.com"
     IDENTITY_PLATFORM_ALLOWED_ORGS = ""
+    USE_CLOUD_SQL_AUTH_PROXY       = "false"
   }
 
   production = {
